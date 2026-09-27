@@ -2,13 +2,13 @@ import {test,expect} from '@playwright/test';
 const headers={'X-Vines-Request':'1'};
 test('Public pages, enquiry persistence, gallery filters and mobile layout',async({page,request})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('/');await expect(page.getByRole('heading',{name:'A bright beginning. A brilliant future.'})).toBeVisible();
+ await page.goto('/');await page.locator('.hero').waitFor({state:'visible',timeout:12000});await expect(page.getByRole('heading',{name:'A bright beginning. A brilliant future.'})).toBeVisible();
  await page.screenshot({path:'/tmp/vines-review/home-desktop.png',fullPage:true});
  await page.goto('/gallery');await page.getByRole('button',{name:'Microsoft Excel',exact:true}).click();await expect(page.locator('.work-card')).toHaveCount(1);
  await page.goto('/admissions');await page.getByLabel('Parent / guardian name').fill('Website test');await page.getByLabel('Email address').fill('test@example.test');await page.getByLabel('Phone number').fill('0700000000');await page.getByLabel('Tell us about your enquiry').fill('Please arrange a school visit.');await page.getByRole('button',{name:'Send enquiry'}).click();await expect(page.getByRole('status')).toContainText('Saved successfully');
  await request.post('/api/demo-login',{headers,data:{role:'teacher'}});const data=await (await request.get('/api/dashboard')).json();expect(data.enquiries.some(e=>e.name==='Website test')).toBeTruthy();
  for(const route of ['/about','/academics','/digital-school','/news','/contact','/policies']){await page.goto(route);await expect(page.locator('main h1')).toBeVisible();}
- await page.setViewportSize({width:390,height:844});await page.goto('/');await page.getByRole('button',{name:'Toggle navigation'}).click();await expect(page.getByRole('link',{name:'Parent login',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();await page.getByRole('button',{name:'Toggle navigation'}).click();await page.screenshot({path:'/tmp/vines-review/home-mobile.png',fullPage:true});expect(errors).toEqual([]);
+ await page.setViewportSize({width:390,height:844});await page.goto('/');await page.locator('.hero').waitFor({state:'visible',timeout:12000});await page.getByRole('button',{name:'Toggle navigation'}).click();await expect(page.getByRole('link',{name:'Parent login',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();await page.getByRole('button',{name:'Toggle navigation'}).click();await page.screenshot({path:'/tmp/vines-review/home-mobile.png',fullPage:true});expect(errors).toEqual([]);
 });
 test('Teacher publishes a grade and homework; parent sees it, submits work and messages',async({browser})=>{
  const teacher=await browser.newContext(),parent=await browser.newContext();
