@@ -1,0 +1,30 @@
+{
+  "name": "blessed-vines-preparatory-school-platform",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --watch server.js --watch lib --watch public/js --ext js,jsx --ignore public/js/app.js --exec \"npm run build && node server.js\"",
+    "build": "node scripts/build.js",
+    "start": "node server.js",
+    "test": "playwright test",
+    "create-user": "node scripts/create-user.js",
+    "send-notifications": "node scripts/send-notifications.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "mongodb": "^6.21.0",
+    "nodemailer": "^9.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "concurrently": "^9.1.2",
+    "esbuild": "^0.28.2",
+    "nodemon": "^3.1.9",
+    "tailwindcss": "^3.4.17"
+  }
+}

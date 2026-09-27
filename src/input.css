@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-white font-body text-slate-800; }
+}
+
+@layer components {
+  .section-kicker { @apply mb-3 text-[11px] font-extrabold tracking-[.18em] text-vines-blue; }
+  .button { @apply inline-flex items-center justify-center gap-2 rounded px-5 py-3 text-xs font-bold uppercase tracking-wide transition hover:-translate-y-0.5; }
+  .nav-link { @apply text-[11px] font-bold uppercase text-slate-700 transition hover:text-vines-blue; }
+}
+
+@layer utilities {
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(42px);
+    transition: opacity 800ms cubic-bezier(.22, 1, .36, 1), transform 800ms cubic-bezier(.22, 1, .36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-on-scroll.reveal-left { transform: translateX(-50px); }
+  .reveal-on-scroll.reveal-right { transform: translateX(50px); }
+  .reveal-on-scroll.is-visible { opacity: 1; transform: translate3d(0, 0, 0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll, .reveal-on-scroll.reveal-left, .reveal-on-scroll.reveal-right { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* Safe scroll animations: browsers without support keep all content visible. */
+  .scroll-reveal { opacity: 1; }
+  @supports (animation-timeline: view()) {
+    .scroll-reveal {
+      animation: reveal-up 700ms cubic-bezier(.22, 1, .36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 28%;
+    }
+    .scroll-reveal.from-left { animation-name: reveal-left; }
+    .scroll-reveal.from-right { animation-name: reveal-right; }
+  }
+  @keyframes reveal-up { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes reveal-left { from { opacity: 0; transform: translateX(-42px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes reveal-right { from { opacity: 0; transform: translateX(42px); } to { opacity: 1; transform: translateX(0); } }
+}
